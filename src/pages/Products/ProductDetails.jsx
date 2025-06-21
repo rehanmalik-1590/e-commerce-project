@@ -71,12 +71,9 @@ const ProductDetails = () => {
                         <div className="w-full lg:w-1/3 shadow-lg rounded-lg bg-gradient-to-br from-purple-400 via-pink-300 to-orange-200 bg-opacity-90 hover:bg-gradient-to-tl hover:from-purple-500 hover:via-pink-400 hover:to-orange-300 hover:shadow-2xl transition-all duration-500 overflow-hidden">
                             <div className="relative w-full h-full flex items-center justify-center">
                                 <img
-                                    src={`/e-commerce-project/assets/uploads/${product.image}`}
+                                    src={product.image}
                                     alt={product.name}
                                     className="w-full h-full object-cover rounded-lg transition-transform duration-500 transform hover:scale-110"
-                                    onError={(e) => {
-                                        e.target.src = '/e-commerce-project/assets/uploads/default-product.jpg'
-                                    }}
                                 />
                                 <div className="absolute top-[2.7rem] right-[-1rem]">
                                     <HeartIcon product={product} />
@@ -126,18 +123,8 @@ const ProductDetails = () => {
                                             <FaShoppingCart className="mr-2 text-blue-500" />
                                             Quantity:
                                         </th>
-                                        <td className="py-4 px-6 text-gray-700 group-hover:text-gray-900">
-                                            <select
-                                                value={qty}
-                                                onChange={handleQtyChange}
-                                                className="p-2 w-[5rem] rounded-lg text-black"
-                                            >
-                                                {[...Array(product.countInStock).keys()].map((x) => (
-                                                    <option key={x + 1} value={x + 1}>
-                                                        {x + 1}
-                                                    </option>
-                                                ))}
-                                            </select>
+                                        <td className=" py-4 px-6 text-gray-700 group-hover:text-gray-900">
+                                            {product.quantity}
                                         </td>
                                     </tr>
                                     <tr className="group border-b hover:bg-gradient-to-r hover:from-indigo-100 hover:to-purple-100 transition-all">
@@ -157,6 +144,21 @@ const ProductDetails = () => {
                                                 </div>
                                             </div>
                                         </td>
+                                        {product.countInStock > 0 && (
+                                            <td className="sm:col-span-3 flex justify-start items-center mt-[2rem] ml-[3rem] sm:ml-[12rem]">
+                                                <select
+                                                    value={qty}
+                                                    onChange={(e) => setQty(e.target.value)}
+                                                    className="p-2 w-[5rem] rounded-lg text-black"
+                                                >
+                                                    {[...Array(product.countInStock).keys()].map((x) => (
+                                                        <option key={x + 1} value={x + 1}>
+                                                            {x + 1}
+                                                        </option>
+                                                    ))}
+                                                </select>
+                                            </td>
+                                        )}
                                     </tr>
                                 </tbody>
                             </table>
@@ -173,18 +175,18 @@ const ProductDetails = () => {
                     </div>
 
                     <div className="container w-full flex flex-wrap items-start justify-between mx-auto mt-12">
-                        <div className="w-full flex items-center justify-between ml-[5rem] mr-[5rem]">
-                            <ProductTabs
-                                loadingProductReview={loadingProductReview}
-                                userInfo={userInfo}
-                                submitHandler={submitHandler}
-                                rating={rating}
-                                setRating={setRating}
-                                comment={comment}
-                                setComment={setComment}
-                                product={product}
-                            />
-                        </div>
+                    <div className="w-full flex items-center justify-between ml-[5rem] mr-[5rem]">
+                        <ProductTabs
+                            loadingProductReview={loadingProductReview}
+                            userInfo={userInfo}
+                            submitHandler={submitHandler}
+                            rating={rating}
+                            setRating={setRating}
+                            comment={comment}
+                            setComment={setComment}
+                            product={product}
+                        />
+                    </div>
                     </div>
                 </div>
             )}
