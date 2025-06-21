@@ -90,15 +90,15 @@ const CategoryList = () => {
                 setUpdatingName(category.name);
               }}
             >
-              <img
-                src={`${import.meta.env.VITE_IMAGE_BASE_URL || ''}${category.image || 'default-category.jpg'}`}
+              {/* <img
+                // src={`${import.meta.env.VITE_IMAGE_BASE_URL || ''}${category.image || 'default-category.jpg'}`}
                 alt={category.name}
                 onError={(e) => {
-                  e.target.src = `${import.meta.env.VITE_IMAGE_BASE_URL || ''}default-category.jpg`;
+                  // e.target.src = `${import.meta.env.VITE_IMAGE_BASE_URL || ''}default-category.jpg`;
                   e.target.onerror = null;
                 }}
                 className="w-10 h-10 rounded-full object-cover"
-              />
+              /> */}
               <span className="text-white font-medium">{category.name}</span>
             </div>
           ))}

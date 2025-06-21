@@ -8,7 +8,6 @@ import HeartIcon from "./HeartIcon";
 const ProductCard = ({ p }) => {
   const dispatch = useDispatch();
   const imageBaseUrl = import.meta.env.VITE_IMAGE_BASE_URL || "/assets/uploads/";
-  const imageUrl = p.image ? `${imageBaseUrl}${p.image}` : `${imageBaseUrl}default-product.jpg`;
 
   const addToCartHandler = (product, qty) => {
     dispatch(addToCart({ ...product, qty }));
@@ -21,7 +20,11 @@ const ProductCard = ({ p }) => {
         <Link to={`/product/${p._id}`}>
           <img
             className="cursor-pointer w-full transition-transform duration-300 transform hover:scale-110"
-            src={imageUrl}
+            src={
+              p.image.startsWith('http') || p.image.startsWith('/') 
+                ? p.image 
+                : `${imageBaseUrl}${p.image}`
+            }
             alt={p.name}
             style={{ height: "200px", objectFit: "cover" }}
             onError={(e) => {

@@ -19,19 +19,15 @@ const ProductList = () => {
   const navigate = useNavigate();
   const { data: categories } = useFetchCategoriesQuery();
 
+  const imageBaseUrl = import.meta.env.VITE_IMAGE_BASE_URL || "/assets/uploads/";
+
   const uploadFileHandler = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
 
     try {
-      const formData = new FormData();
-      formData.append('image', file);
-      
-      // In a real app, you would upload to a server here
-      // For now, we'll just use a client-side URL
-      const imageUrl = URL.createObjectURL(file);
       setImage(file);
-      setImageUrl(imageUrl);
+      setImageUrl(file.name);
       toast.success("Image selected successfully");
     } catch (error) {
       toast.error("Image selection failed");
@@ -48,9 +44,7 @@ const ProductList = () => {
     }
 
     try {
-      // In a real app, you would upload the image to a server here
-      // For now, we'll use either the uploaded image or a default
-      const productImage = imageUrl || '/assets/uploads/default-product.jpg';
+      const productImage = imageUrl || 'default-product.jpg';
 
       const newProduct = {
         _id: generateProductId(),
@@ -67,9 +61,7 @@ const ProductList = () => {
         createdAt: new Date().toISOString()
       };
 
-      // In a real app, you would save to your backend here
       console.log('New product:', newProduct);
-      
       toast.success(`${newProduct.name} is created`);
       navigate('/admin/allproductslist');
     } catch (error) {
@@ -87,9 +79,13 @@ const ProductList = () => {
           {imageUrl && (
             <div className="text-center mb-4">
               <img 
-                src={imageUrl}
+                src={`${imageUrl?.startsWith("http") || imageUrl?.startsWith("/") ? imageUrl : imageBaseUrl + imageUrl}`}
                 alt="product preview" 
                 className="block mx-auto max-h-[200px] object-contain" 
+                onError={(e) => {
+                  e.target.src = `${imageBaseUrl}default-product.jpg`;
+                  e.target.onerror = null;
+                }}
               />
             </div>
           )}

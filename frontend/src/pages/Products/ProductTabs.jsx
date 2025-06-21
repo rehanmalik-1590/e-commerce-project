@@ -13,6 +13,7 @@ const ProductTabs = ({
   comment,
   setComment,
   product,
+  reviews
 }) => {
   const { data, isLoading } = useGetTopProductsQuery();
   const [activeTab, setActiveTab] = useState(1);
@@ -49,7 +50,7 @@ const ProductTabs = ({
         >
           All Reviews
         </button>
-        <button
+        {/* <button
           onClick={() => handleTabClick(3)}
           className={`px-4 py-2 rounded-lg transition-colors duration-300 ${
             activeTab === 3
@@ -58,7 +59,7 @@ const ProductTabs = ({
           }`}
         >
           Related Products
-        </button>
+        </button> */}
       </div>
 
       {activeTab === 1 && (
@@ -104,7 +105,7 @@ const ProductTabs = ({
                 disabled={loadingProductReview}
                 className="bg-gradient-to-r from-blue-500 to-blue-700 text-white py-2 px-4 rounded-lg hover:from-blue-600 hover:to-blue-800"
               >
-                Submit
+                {loadingProductReview ? "Submitting..." : "Submit"}
               </button>
             </form>
           ) : (
@@ -124,70 +125,74 @@ const ProductTabs = ({
 
       {activeTab === 2 && (
         <div className="w-full p-6 bg-gradient-to-br from-white to-blue-50 shadow-md rounded-lg">
-          {product.reviews.length === 0 ? (
+          {!reviews || reviews.length === 0 ? (
             <p className="text-center text-gray-800">No Reviews</p>
           ) : (
-            <table className="w-full table-auto border-collapse border border-gray-300">
-              <thead>
-                <tr>
-                  <th className="border border-gray-300 p-2 text-left text-blue-700">Reviewer</th>
-                  <th className="border border-gray-300 p-2 text-left text-blue-700">Review</th>
-                </tr>
-              </thead>
-              <tbody>
-                {product.reviews.map((review) => (
-                  <tr key={review._id}>
-                    <td className="border border-gray-300 p-2 text-gray-800">
-                      <strong>{review.name}</strong>
-                      <p className="text-sm text-gray-500">
-                        {review.createdAt.substring(0, 10)}
-                      </p>
-                    </td>
-                    <td className="border border-gray-300 p-2 text-gray-800">
-                      <p>{review.comment}</p>
-                      <Ratings value={review.rating} />
-                    </td>
+            <div className="overflow-x-auto">
+              <table className="w-full table-auto border-collapse">
+                <thead>
+                  <tr className="bg-gray-100">
+                    <th className="p-3 text-left text-blue-700">Reviewer</th>
+                    <th className="p-3 text-left text-blue-700">Review</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {reviews.map((review) => (
+                    <tr key={review._id} className="border-b border-gray-200 hover:bg-gray-50">
+                      <td className="p-3">
+                        <strong>{review.name}</strong>
+                        <p className="text-sm text-gray-500">
+                          {new Date(review.createdAt).toLocaleDateString()}
+                        </p>
+                      </td>
+                      <td className="p-3">
+                        <Ratings value={review.rating} />
+                        <p className="mt-2 text-gray-700">{review.comment}</p>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           )}
         </div>
       )}
 
       {activeTab === 3 && (
-        <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="w-full">
           {!data ? (
             <Loader />
           ) : (
-            data.map((product) => (
-              <div
-                key={product._id}
-                className="bg-gradient-to-br from-gray-600 to-gray-800 p-6 shadow-md rounded-lg flex flex-col items-center justify-between"
-              >
-                <div className="relative w-full h-[250px] group">
-                  <img
-                    src={`${imageBaseUrl}${product.image}`}
-                    alt={product.name}
-                    className="w-full h-full rounded-lg object-cover bg-gradient-to-br from-blue-300 via-transparent to-purple-300 group-hover:opacity-80 group-hover:scale-110 transition-transform duration-300 ease-in-out"
-                    onError={(e) => {
-                      e.target.src = `${imageBaseUrl}default-product.jpg`;
-                      e.target.onerror = null;
-                    }}
-                  />
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {data.map((product) => (
+                <div
+                  key={product._id}
+                  className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300"
+                >
+                  <div className="relative h-48 overflow-hidden">
+                    <img
+                      src={`${imageBaseUrl}${product.image}`}
+                      alt={product.name}
+                      className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                      onError={(e) => {
+                        e.target.src = `${imageBaseUrl}default-product.jpg`;
+                        e.target.onerror = null;
+                      }}
+                    />
+                  </div>
+                  <div className="p-4">
+                    <h3 className="font-semibold text-lg text-gray-800 mb-1 truncate">{product.name}</h3>
+                    <p className="text-gray-600 font-bold mb-2">${product.price.toFixed(2)}</p>
+                    <Link
+                      to={`/product/${product._id}`}
+                      className="inline-block bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg transition-colors duration-300"
+                    >
+                      View Product
+                    </Link>
+                  </div>
                 </div>
-                <div className="mt-4 bg-gradient-to-br from-white to-gray-500 p-4 rounded-lg shadow w-full text-center flex flex-col items-center">
-                  <p className="font-semibold text-lg text-gray-800 truncate">{product.name}</p>
-                  <p className="text-gray-600">${product.price.toFixed(2)}</p>
-                  <Link
-                    to={`/product/${product._id}`}
-                    className="text-blue-600 hover:underline"
-                  >
-                    View Product
-                  </Link>
-                </div>
-              </div>
-            ))
+              ))}
+            </div>
           )}
         </div>
       )}
