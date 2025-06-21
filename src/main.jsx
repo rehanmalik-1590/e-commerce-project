@@ -1,10 +1,18 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import App from './App.jsx';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import './index.css';
-import { Route, RouterProvider, createRoutesFromElements, createBrowserRouter } from 'react-router-dom';
+import { 
+  Route, 
+  RouterProvider, 
+  createRoutesFromElements, 
+  createBrowserRouter 
+} from 'react-router-dom';
 import { Provider } from 'react-redux';
 import store from './redux/store.js';
+import ErrorPage from './pages/ErrorPage.jsx';
+import LoadingSpinner from './components/LoadingSpinner.jsx';
 
 // Pages
 import Home from './pages/Home.jsx';
@@ -45,7 +53,7 @@ import { PayPalScriptProvider } from '@paypal/react-paypal-js';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
-    <Route path="/" element={<App />}>
+    <Route path="/" element={<App />} errorElement={<ErrorPage />}>
       {/* Public Routes */}
       <Route index element={<Home />} />
       <Route path="login" element={<Login />} />
@@ -76,14 +84,17 @@ const router = createBrowserRouter(
         <Route path="product/update/:_id" element={<ProductUpdate />} />
       </Route>
     </Route>
-  )
+  ),
+  {
+    basename: '/e-commerce-project/'
+  }
 );
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <Provider store={store}>
-      <PayPalScriptProvider>
-        <RouterProvider router={router} />
+      <PayPalScriptProvider deferLoading={true}>
+        <RouterProvider router={router} fallbackElement={<LoadingSpinner />} />
       </PayPalScriptProvider>
     </Provider>
   </StrictMode>
