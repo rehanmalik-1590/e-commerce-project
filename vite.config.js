@@ -5,11 +5,14 @@ export default defineConfig({
   base: '/e-commerce-project/',
   plugins: [react()],
   build: {
-    rollupOptions: {
-      external: ['react-bootstrap']
-    }
+    outDir: 'dist',
+    assetsDir: 'assets',
+    emptyOutDir: true,
+    sourcemap: false
   },
-  optimizeDeps: {
-    include: ['react-bootstrap']
+  server: {
+    port: 3000,
+    strictPort: true,
+    open: true
   }
 })

@@ -1,37 +1,24 @@
-import { useRouteError, useNavigate } from 'react-router-dom';
+import { useRouteError, useNavigate } from 'react-router-dom'
 
 export default function ErrorPage() {
-  const error = useRouteError();
-  const navigate = useNavigate();
+  const error = useRouteError()
+  const navigate = useNavigate()
 
-  console.error('Router Error:', error);
+  console.error('Router Error:', error)
 
   return (
-    <div style={{
-      display: 'flex',
-      flexDirection: 'column',
-      justifyContent: 'center',
-      alignItems: 'center',
-      height: '100vh'
-    }}>
-      <h1>Oops!</h1>
-      <p>Sorry, an unexpected error has occurred.</p>
-      <p style={{ color: 'red' }}>
-        <i>{error.statusText || error.message || 'Unknown error'}</i>
+    <div className="flex flex-col justify-center items-center min-h-screen bg-gray-50">
+      <h1 className="text-4xl font-bold text-gray-800 mb-4">Oops!</h1>
+      <p className="text-lg text-gray-600 mb-2">Sorry, an unexpected error has occurred.</p>
+      <p className="text-red-500 italic mb-6">
+        {error.statusText || error.message || 'Unknown error'}
       </p>
       <button 
-        style={{
-          padding: '8px 16px',
-          backgroundColor: '#0d6efd',
-          color: 'white',
-          border: 'none',
-          borderRadius: '4px',
-          cursor: 'pointer'
-        }}
+        className="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
         onClick={() => navigate('/')}
       >
         Go Back Home
       </button>
     </div>
-  );
+  )
 }

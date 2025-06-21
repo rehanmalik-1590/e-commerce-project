@@ -1,9 +1,7 @@
 export default function LoadingSpinner() {
   return (
-    <div className="d-flex justify-content-center my-5">
-      <div className="spinner-border text-primary" role="status">
-        <span className="visually-hidden">Loading...</span>
-      </div>
+    <div className="flex justify-center my-12">
+      <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
     </div>
-  );
+  )
 }

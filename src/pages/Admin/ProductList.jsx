@@ -27,8 +27,6 @@ const ProductList = () => {
       const formData = new FormData();
       formData.append('image', file);
       
-      // In a real app, you would upload to a server here
-      // For now, we'll just use a client-side URL
       const imageUrl = URL.createObjectURL(file);
       setImage(file);
       setImageUrl(imageUrl);
@@ -48,9 +46,7 @@ const ProductList = () => {
     }
 
     try {
-      // In a real app, you would upload the image to a server here
-      // For now, we'll use either the uploaded image or a default
-      const productImage = imageUrl || '/assets/uploads/default-product.jpg';
+      const productImage = imageUrl || '/e-commerce-project/assets/uploads/default-product.jpg';
 
       const newProduct = {
         _id: generateProductId(),
@@ -67,9 +63,7 @@ const ProductList = () => {
         createdAt: new Date().toISOString()
       };
 
-      // In a real app, you would save to your backend here
       console.log('New product:', newProduct);
-      
       toast.success(`${newProduct.name} is created`);
       navigate('/admin/allproductslist');
     } catch (error) {
@@ -89,7 +83,10 @@ const ProductList = () => {
               <img 
                 src={imageUrl}
                 alt="product preview" 
-                className="block mx-auto max-h-[200px] object-contain" 
+                className="block mx-auto max-h-[200px] object-contain"
+                onError={(e) => {
+                  e.target.src = '/e-commerce-project/assets/uploads/default-product.jpg'
+                }}
               />
             </div>
           )}
