@@ -16,6 +16,7 @@ const ProductTabs = ({
 }) => {
   const { data, isLoading } = useGetTopProductsQuery();
   const [activeTab, setActiveTab] = useState(1);
+  const imageBaseUrl = import.meta.env.VITE_IMAGE_BASE_URL || "/assets/uploads/";
 
   if (isLoading) {
     return <Loader />;
@@ -166,9 +167,13 @@ const ProductTabs = ({
               >
                 <div className="relative w-full h-[250px] group">
                   <img
-                    src={product.image}
+                    src={`${imageBaseUrl}${product.image}`}
                     alt={product.name}
                     className="w-full h-full rounded-lg object-cover bg-gradient-to-br from-blue-300 via-transparent to-purple-300 group-hover:opacity-80 group-hover:scale-110 transition-transform duration-300 ease-in-out"
+                    onError={(e) => {
+                      e.target.src = `${imageBaseUrl}default-product.jpg`;
+                      e.target.onerror = null;
+                    }}
                   />
                 </div>
                 <div className="mt-4 bg-gradient-to-br from-white to-gray-500 p-4 rounded-lg shadow w-full text-center flex flex-col items-center">

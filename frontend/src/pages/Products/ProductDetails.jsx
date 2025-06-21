@@ -25,6 +25,8 @@ const ProductDetails = () => {
     const { userInfo } = useSelector((state) => state.auth);
     const [createReview, { isLoading: loadingProductReview }] = useCreateReviewMutation();
 
+    const imageBaseUrl = import.meta.env.VITE_IMAGE_BASE_URL || "/assets/uploads/";
+
     const submitHandler = async (e) => {
         e.preventDefault();
 
@@ -46,13 +48,6 @@ const ProductDetails = () => {
         navigate("/cart");
     };
 
-    const handleQtyChange = (e) => {
-        const value = Number(e.target.value);
-        if (!isNaN(value) && value > 0) {
-            setQty(value);
-        }
-    };
-
     return (
         <div className="overflow-x-hidden">
             <div className="ml-10 sm:ml-20 mt-4">
@@ -71,9 +66,13 @@ const ProductDetails = () => {
                         <div className="w-full lg:w-1/3 shadow-lg rounded-lg bg-gradient-to-br from-purple-400 via-pink-300 to-orange-200 bg-opacity-90 hover:bg-gradient-to-tl hover:from-purple-500 hover:via-pink-400 hover:to-orange-300 hover:shadow-2xl transition-all duration-500 overflow-hidden">
                             <div className="relative w-full h-full flex items-center justify-center">
                                 <img
-                                    src={product.image}
+                                    src={`${imageBaseUrl}${product.image}`}
                                     alt={product.name}
                                     className="w-full h-full object-cover rounded-lg transition-transform duration-500 transform hover:scale-110"
+                                    onError={(e) => {
+                                        e.target.src = `${imageBaseUrl}default-product.jpg`;
+                                        e.target.onerror = null;
+                                    }}
                                 />
                                 <div className="absolute top-[2.7rem] right-[-1rem]">
                                     <HeartIcon product={product} />
@@ -175,18 +174,18 @@ const ProductDetails = () => {
                     </div>
 
                     <div className="container w-full flex flex-wrap items-start justify-between mx-auto mt-12">
-                    <div className="w-full flex items-center justify-between ml-[5rem] mr-[5rem]">
-                        <ProductTabs
-                            loadingProductReview={loadingProductReview}
-                            userInfo={userInfo}
-                            submitHandler={submitHandler}
-                            rating={rating}
-                            setRating={setRating}
-                            comment={comment}
-                            setComment={setComment}
-                            product={product}
-                        />
-                    </div>
+                        <div className="w-full flex items-center justify-between ml-[5rem] mr-[5rem]">
+                            <ProductTabs
+                                loadingProductReview={loadingProductReview}
+                                userInfo={userInfo}
+                                submitHandler={submitHandler}
+                                rating={rating}
+                                setRating={setRating}
+                                comment={comment}
+                                setComment={setComment}
+                                product={product}
+                            />
+                        </div>
                     </div>
                 </div>
             )}

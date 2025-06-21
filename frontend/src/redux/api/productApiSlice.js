@@ -4,32 +4,38 @@ import { dummyProducts, generateProductId, generateReviewId } from '../../data/d
 
 export const productApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
+
+    // Fetch all products
     getProducts: builder.query({
       queryFn: () => ({ data: { products: dummyProducts } }),
       providesTags: ['Product'],
       keepUnusedDataFor: 5,
     }),
 
+    // Get product by ID
     getProductById: builder.query({
-      queryFn: (productId) => ({ 
-        data: dummyProducts.find(p => p._id === productId) || dummyProducts[0] 
+      queryFn: (productId) => ({
+        data: dummyProducts.find(p => p._id === productId) || dummyProducts[0],
       }),
       providesTags: (result, error, productId) => [
         { type: 'Product', id: productId },
       ],
     }),
 
+    // All Products for Admin panel
     allProducts: builder.query({
       queryFn: () => ({ data: dummyProducts }),
     }),
 
+    // Product details
     getProductDetails: builder.query({
       queryFn: (productId) => ({
-        data: dummyProducts.find(p => p._id === productId) || dummyProducts[0]
+        data: dummyProducts.find(p => p._id === productId) || dummyProducts[0],
       }),
       keepUnusedDataFor: 5,
     }),
 
+    // Create product (mock)
     createProduct: builder.mutation({
       queryFn: (productData) => {
         const newProduct = {
@@ -45,6 +51,7 @@ export const productApiSlice = apiSlice.injectEndpoints({
       invalidatesTags: ['Product'],
     }),
 
+    // Update product (mock)
     updateProduct: builder.mutation({
       queryFn: ({ productId, formData }) => {
         const index = dummyProducts.findIndex(p => p._id === productId);
@@ -56,17 +63,19 @@ export const productApiSlice = apiSlice.injectEndpoints({
       },
     }),
 
+    // Upload product image (mock)
     uploadProductImage: builder.mutation({
       queryFn: (file) => {
-        return { 
-          data: { 
-            image: `product_${generateProductId()}.jpg`,
-            message: 'Image uploaded successfully' 
-          } 
+        return {
+          data: {
+            image: file.name || `product_${generateProductId()}.jpg`,
+            message: 'Image uploaded successfully'
+          }
         };
       },
     }),
 
+    // Delete product (mock)
     deleteProduct: builder.mutation({
       queryFn: (productId) => {
         const index = dummyProducts.findIndex(p => p._id === productId);
@@ -79,6 +88,7 @@ export const productApiSlice = apiSlice.injectEndpoints({
       invalidatesTags: ['Product'],
     }),
 
+    // Create review (mock)
     createReview: builder.mutation({
       queryFn: ({ productId, rating, comment }) => {
         const product = dummyProducts.find(p => p._id === productId);
@@ -91,49 +101,52 @@ export const productApiSlice = apiSlice.injectEndpoints({
             user: 'user_123',
             createdAt: new Date().toISOString()
           };
-          
+
           product.reviews = product.reviews || [];
           product.reviews.push(review);
-          
+
           product.numReviews = product.reviews.length;
           product.rating = product.reviews.reduce((acc, item) => item.rating + acc, 0) / product.reviews.length;
-          
+
           return { data: review };
         }
         return { error: { status: 404, data: { message: 'Product not found' } } };
       },
     }),
 
+    // Get top rated products
     getTopProducts: builder.query({
-      queryFn: () => ({ 
+      queryFn: () => ({
         data: [...dummyProducts]
           .sort((a, b) => b.rating - a.rating)
-          .slice(0, 5) 
+          .slice(0, 5)
       }),
       keepUnusedDataFor: 5,
     }),
 
+    // Get newly created products
     getNewProducts: builder.query({
-      queryFn: () => ({ 
+      queryFn: () => ({
         data: [...dummyProducts]
           .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-          .slice(0, 5) 
+          .slice(0, 5)
       }),
       keepUnusedDataFor: 5,
     }),
 
+    // Filtered products for shop page
     getFilteredProducts: builder.query({
       queryFn: ({ checked, radio }) => {
         let filtered = [...dummyProducts];
-        
+
         if (checked.length > 0) {
           filtered = filtered.filter(p => checked.includes(p.category));
         }
-        
+
         if (radio.length > 0) {
           filtered = filtered.filter(p => p.brand === radio[0]);
         }
-        
+
         return { data: filtered };
       },
     }),

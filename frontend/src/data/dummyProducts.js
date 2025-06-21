@@ -45,19 +45,28 @@ const productNames = [
 const categories = ["Headphones", "Watches", "Laptops", "VR", "Glasses", "Bags", "Jackets", "Shoes"];
 const brands = ["TechGear", "UrbanStyle", "GadgetPlus", "EliteWear", "SoundMaster", "VisionPro", "TravelEssentials", "SportFit"];
 
-export const dummyProducts = productNames.map((name, index) => ({
-  _id: `prod_${index + 1}`,
-  name,
-  image: `product-${index + 1}.jpg`,
-  description: `Premium ${name} with advanced features`,
-  brand: brands[index % brands.length],
-  category: categories[index % categories.length],
-  price: Math.round((50 + Math.random() * 450) * 100) / 100,
-  countInStock: Math.floor(Math.random() * 50) + 5,
-  rating: Math.round((3 + Math.random() * 2) * 10) / 10,
-  numReviews: Math.floor(Math.random() * 100),
-  createdAt: new Date(Date.now() - Math.floor(Math.random() * 1000 * 60 * 60 * 24 * 30)).toISOString()
-}));
+// Image configuration
+const IMAGE_BASE_URL = import.meta.env.VITE_IMAGE_BASE_URL || '/assets/uploads';
+const TOTAL_PRODUCT_IMAGES = 40; // product-1.jpg to product-40.jpg
+
+export const dummyProducts = productNames.map((name, index) => {
+  const productImageNumber = (index % TOTAL_PRODUCT_IMAGES) + 1;
+  const productImage = `product-${productImageNumber}.jpg`;
+
+  return {
+    _id: `prod_${index + 1}`,
+    name,
+    image: `${IMAGE_BASE_URL}/${productImage}`, // 👈 correct slash here
+    description: `Premium ${name} with advanced features`,
+    brand: brands[index % brands.length],
+    category: categories[index % categories.length],
+    price: Math.round((50 + Math.random() * 450) * 100) / 100,
+    countInStock: Math.floor(Math.random() * 50) + 5,
+    rating: Math.round((3 + Math.random() * 2) * 10) / 10,
+    numReviews: Math.floor(Math.random() * 100),
+    createdAt: new Date(Date.now() - Math.floor(Math.random() * 1000 * 60 * 60 * 24 * 30)).toISOString()
+  };
+});
 
 // Helper functions
 export const generateProductId = () => `prod_${Date.now()}`;

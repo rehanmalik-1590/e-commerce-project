@@ -10,6 +10,8 @@ const Cart = () => {
   const cart = useSelector((state) => state.cart);
   const { cartItems } = cart;
 
+  const imageBaseUrl = import.meta.env.VITE_IMAGE_BASE_URL || "/assets/uploads/";
+
   const addToCartHandler = (product, qty) => {
     dispatch(addToCart({ ...product, qty }));
   };
@@ -22,11 +24,10 @@ const Cart = () => {
     navigate("/login?redirect=/shipping");
   };
 
-  // Function to get the correct image path
   const getImagePath = (image) => {
-    if (!image) return '/assets/uploads/default-product.jpg';
-    if (image.startsWith('http')) return image;
-    return `/assets/uploads/${image}`;
+    if (!image) return `${imageBaseUrl}default-product.jpg`;
+    if (image.startsWith("http")) return image;
+    return `${imageBaseUrl}${image}`;
   };
 
   return (
@@ -41,11 +42,11 @@ const Cart = () => {
           </div>
         ) : (
           <div className="mx-2 sm:mx-5 md:mx-10 lg:mx-20 w-auto rounded-lg border border-gray-300 p-2 sm:p-4 md:p-6">
-            {/* Mobile View: Card Layout */}
+            {/* Mobile View */}
             <div className="block lg:hidden">
               {cartItems.map((item) => (
-                <div 
-                  key={item._id} 
+                <div
+                  key={item._id}
                   className="mb-4 rounded-lg border border-gray-300 p-3 sm:p-4"
                 >
                   <div className="flex flex-col sm:flex-row items-start sm:items-center sm:space-x-4">
@@ -54,12 +55,14 @@ const Cart = () => {
                       alt={item.name}
                       className="w-full sm:w-24 h-24 rounded-lg object-cover shadow-md mb-3 sm:mb-0"
                       onError={(e) => {
-                        e.target.src = '/assets/uploads/default-product.jpg';
-                        e.target.className = 'w-full sm:w-24 h-24 rounded-lg object-contain shadow-md mb-3 sm:mb-0';
+                        e.target.src = `${imageBaseUrl}default-product.jpg`;
+                        e.target.onerror = null;
                       }}
                     />
                     <div className="flex-1 w-full">
-                      <h3 className="text-base sm:text-lg font-medium text-gray-100">{item.name}</h3>
+                      <h3 className="text-base sm:text-lg font-medium text-gray-100">
+                        {item.name}
+                      </h3>
                       <p className="text-sm sm:text-base text-gray-300">Brand: {item.brand}</p>
                       <p className="text-sm sm:text-base text-gray-300">Price: ${item.price}</p>
                       <div className="mt-2 flex items-center justify-between">
@@ -87,7 +90,7 @@ const Cart = () => {
               ))}
             </div>
 
-            {/* Desktop View: Table Layout */}
+            {/* Desktop View */}
             <div className="hidden lg:block">
               <div className="overflow-x-auto">
                 <table className="min-w-full bg-transparent">
@@ -110,8 +113,8 @@ const Cart = () => {
                             alt={item.name}
                             className="h-auto w-[10rem] rounded-lg object-cover shadow-md"
                             onError={(e) => {
-                              e.target.src = '/assets/uploads/default-product.jpg';
-                              e.target.className = 'h-auto w-[10rem] rounded-lg object-contain shadow-md';
+                              e.target.src = `${imageBaseUrl}default-product.jpg`;
+                              e.target.onerror = null;
                             }}
                           />
                         </td>

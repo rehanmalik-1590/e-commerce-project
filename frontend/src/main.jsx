@@ -76,7 +76,10 @@ const router = createBrowserRouter(
         <Route path="product/update/:_id" element={<ProductUpdate />} />
       </Route>
     </Route>
-  )
+  ),
+  {
+    basename: '/e-commerce-project',
+  }
 );
 
 createRoot(document.getElementById('root')).render(
